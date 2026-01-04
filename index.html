@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bob the Blob</title>
+    <style>
+        /* 1. SET THE STAGE */
+        body {
+            background-color: #1a1a2e; /* Dark Space Blue */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full Screen Height */
+            margin: 0;
+            overflow: hidden; /* No scrollbars */
+            font-family: sans-serif;
+        }
+
+        /* 2. THE CHARACTER CONTAINER */
+        #bob-container {
+            width: 300px;
+            /* ANIMATION: Make him float up and down */
+            animation: float 3s ease-in-out infinite; 
+            cursor: pointer; /* Shows hand icon */
+            transition: transform 0.1s; /* Smooth movement */
+        }
+
+        /* 3. THE FLOATING ANIMATION KEYFRAMES */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); } /* Move up */
+            100% { transform: translateY(0px); }
+        }
+
+        /* 4. INTERACTIVE CLASSES (We toggle these with JS) */
+        .scared .body-shape {
+            fill: #e94560 !important; /* Turn Red */
+        }
+        .scared .mouth {
+            height: 40px !important; /* Open Mouth wide */
+            ry: 20px !important;     /* Make mouth round (O-shape) */
+        }
+
+        /* Instructions text */
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            color: #fff;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bob-container">
+        <svg viewBox="0 0 200 200">
+            <circle class="body-shape" cx="100" cy="100" r="90" fill="#0f3460" stroke="#e94560" stroke-width="5"/>
+            
+            <ellipse cx="100" cy="180" rx="60" ry="10" fill="black" opacity="0.3"/>
+
+            <circle cx="70" cy="80" r="25" fill="white"/>
+            <circle cx="130" cy="80" r="25" fill="white"/>
+
+            <circle id="pupil-left" cx="70" cy="80" r="10" fill="#16213e"/>
+            <circle id="pupil-right" cx="130" cy="80" r="10" fill="#16213e"/>
+
+            <rect class="mouth" x="70" y="130" width="60" height="10" rx="5" ry="5" fill="#e94560" transition="0.3s"/>
+        </svg>
+    </div>
+
+    <div class="instructions">Move your mouse • Click to Scare him</div>
+
+    <script>
+        // Select the eyes
+        const pupilLeft = document.getElementById('pupil-left');
+        const pupilRight = document.getElementById('pupil-right');
+        const bob = document.getElementById('bob-container');
+
+        // EVENT 1: MOUSE TRACKING
+        document.addEventListener('mousemove', (event) => {
+            // Get mouse position
+            let x = event.clientX;
+            let y = event.clientY;
+
+            // The Math: Calculate how far to move the eyes
+            // We divide by a large number (15) to keep the eyes inside the face
+            let moveX = (window.innerWidth / 2 - x) / 15; 
+            let moveY = (window.innerHeight / 2 - y) / 15;
+
+            // Apply the movement
+            // Left Eye (Original X is 70)
+            pupilLeft.setAttribute('cx', 70 - moveX);
+            pupilLeft.setAttribute('cy', 80 - moveY);
+
+            // Right Eye (Original X is 130)
+            pupilRight.setAttribute('cx', 130 - moveX);
+            pupilRight.setAttribute('cy', 80 - moveY);
+        });
+
+        // EVENT 2: CLICK REACTION
+        document.addEventListener('mousedown', () => {
+            bob.classList.add('scared'); // Add class
+        });
+
+        document.addEventListener('mouseup', () => {
+            bob.classList.remove('scared'); // Remove class
+        });
+
+    </script>
+</body>
+</html>
